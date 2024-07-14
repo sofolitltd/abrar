@@ -1,0 +1,5 @@
+package com.sofolit.abara
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity: FlutterActivity()
