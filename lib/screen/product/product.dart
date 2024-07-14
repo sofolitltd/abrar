@@ -314,6 +314,7 @@ class Product extends StatelessWidget {
                                       id: productModel.id,
                                       collectionName: 'products');
 
+                                  //
                                   for (int i = 0;
                                       i < productModel.imageUrls.length;
                                       i++) {
@@ -325,7 +326,10 @@ class Product extends StatelessWidget {
                                     });
                                   }
                                 },
-                                icon: const Icon(Icons.delete_outline, size: 20,))
+                                icon: const Icon(
+                                  Icons.delete_outline,
+                                  size: 20,
+                                ))
                           ],
                         ),
                       );

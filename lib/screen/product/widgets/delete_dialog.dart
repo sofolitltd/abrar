@@ -20,6 +20,8 @@ showDeleteDialog({
   Widget continueButton = TextButton(
     child: const Text("Delete"),
     onPressed: () async {
+      Navigator.of(context).pop(); // Close the alert dialog
+
       // Add logic to delete the item here
       await FirebaseFirestore.instance
           .collection(collectionName)
@@ -27,7 +29,6 @@ showDeleteDialog({
           .delete()
           .then((value) {
         Fluttertoast.showToast(msg: 'Delete successfully');
-        Navigator.of(context).pop(); // Close the alert dialog
         if (collectionName != 'categories') {
           Navigator.of(context).pop(); // Close the alert dialog
         }
