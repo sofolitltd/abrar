@@ -1,6 +1,5 @@
 import 'package:abara/utils/constants.dart';
 import 'package:abara/widgets/header.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/product_model.dart';
@@ -34,7 +33,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (kIsWeb) const SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       //
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,

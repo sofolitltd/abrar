@@ -317,7 +317,7 @@ class Home extends StatelessWidget {
                                           : 8,
                                   mainAxisSpacing: 10,
                                   crossAxisSpacing: 10,
-                                  childAspectRatio: .8,
+                                  childAspectRatio: .7,
                                   // MediaQuery.sizeOf(context).width < 600
                                   //     ? .8
                                   //     : 1.2,
@@ -343,7 +343,7 @@ class Home extends StatelessWidget {
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(4),
                                         border: Border.all(
                                           color: Colors.black12,
                                         ),
@@ -355,8 +355,8 @@ class Home extends StatelessWidget {
                                             child: ClipRRect(
                                               borderRadius:
                                                   const BorderRadius.only(
-                                                topLeft: Radius.circular(8),
-                                                topRight: Radius.circular(8),
+                                                topLeft: Radius.circular(4),
+                                                topRight: Radius.circular(4),
                                               ),
                                               child: Image.network(
                                                 // height: 40,
@@ -367,20 +367,26 @@ class Home extends StatelessWidget {
                                             ),
                                           ),
 
-                                          const SizedBox(height: 2),
-
                                           //
-                                          Container(
-                                            height: 36,
+                                          Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal: 2),
-                                            alignment: Alignment.center,
-                                            child: Text(
-                                              categoryModel.name,
-                                              textAlign: TextAlign.center,
-                                              style: const TextStyle(
-                                                height: 1.2,
-                                                fontWeight: FontWeight.bold,
+                                              vertical: 6,
+                                              horizontal: 2,
+                                            ),
+                                            child: Container(
+                                              height: 32,
+                                              alignment: Alignment.center,
+                                              child: Text(
+                                                categoryModel.name,
+                                                textAlign: TextAlign.center,
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .copyWith(
+                                                      height: 1.2,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
                                               ),
                                             ),
                                           ),
@@ -470,7 +476,7 @@ class Home extends StatelessWidget {
                                   crossAxisSpacing: 16,
                                   childAspectRatio:
                                       MediaQuery.sizeOf(context).width < 600
-                                          ? 1
+                                          ? .8
                                           : .8,
                                 ),
                                 itemCount: data.length,
@@ -554,7 +560,7 @@ class Home extends StatelessWidget {
 
                                                 //price
                                                 Text(
-                                                  '$kTkSymbol ${productModel.salePrice}',
+                                                  '$kTkSymbol ${productModel.salePrice.toStringAsFixed(0)}',
                                                   textAlign: TextAlign.left,
                                                   style: const TextStyle(
                                                     height: 1,

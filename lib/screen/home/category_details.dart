@@ -1,7 +1,6 @@
 import 'package:abara/model/category_model.dart';
 import 'package:abara/widgets/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../model/product_model.dart';
@@ -32,9 +31,9 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     if (_sortBy == 'Default') {
       ref = ref1;
     } else if (_sortBy == 'Low to High') {
-      ref = ref1.orderBy('regularPrice', descending: false);
+      ref = ref1.orderBy('salePrice', descending: false);
     } else if (_sortBy == 'High to Low') {
-      ref = ref1.orderBy('regularPrice', descending: true);
+      ref = ref1.orderBy('salePrice', descending: true);
     }
 
     return Scaffold(
@@ -54,7 +53,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (kIsWeb) const SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       //
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,7 +137,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                             ButtonTheme(
                               alignedDropdown: true,
                               child: Container(
-                                width: 130,
+                                width: 150,
                                 decoration: BoxDecoration(
                                   border: Border.all(),
                                   borderRadius: BorderRadius.circular(4),
@@ -290,7 +289,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
 
                                             //price
                                             Text(
-                                              '$kTkSymbol ${productModel.salePrice}',
+                                              '$kTkSymbol ${productModel.salePrice.toStringAsFixed(0)}',
                                               textAlign: TextAlign.left,
                                               style: const TextStyle(
                                                 height: 1,
