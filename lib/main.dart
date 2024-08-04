@@ -1,6 +1,11 @@
+import 'package:abara/screen/home/category_details.dart';
 import 'package:abara/screen/home/home.dart';
+import 'package:abara/screen/home/product_details.dart';
+import 'package:abara/screen/home/search.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:go_router/go_router.dart';
 
 import 'firebase_options.dart';
 
@@ -11,6 +16,9 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  usePathUrlStrategy();
+
+  //
   runApp(const MyApp());
 }
 
@@ -19,24 +27,62 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
+      routerConfig: _router,
       title: 'Abrar Shop',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueAccent),
-        // elevatedButtonTheme: ElevatedButtonThemeData(
-        //   style: ElevatedButton.styleFrom(
-        //       minimumSize: const Size(48, 48),
-        //       shape: RoundedRectangleBorder(
-        //         borderRadius: BorderRadius.circular(8),
-        //       ),
-        //       textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-        //           // fontWeight: FontWeight.bold,
-        //           )),
-        // ),
         useMaterial3: true,
         fontFamily: 'Telenor',
       ),
-      home: const Home(),
+      debugShowCheckedModeBanner: false,
+      debugShowMaterialGrid: false,
     );
   }
 }
+
+//
+// GoRouter configuration
+final _router = GoRouter(
+  routes: [
+    GoRoute(
+      name: 'home',
+      path: '/',
+      pageBuilder: (context, state) => const NoTransitionPage(child: Home()),
+    ),
+    //
+    GoRoute(
+      name: 'search',
+      path: '/search',
+      pageBuilder: (context, state) => const NoTransitionPage(child: Search()),
+    ),
+
+    //
+    GoRoute(
+      name: 'category',
+      path: '/:category',
+      pageBuilder: (context, state) {
+        return NoTransitionPage(
+          child: CategoryDetails(
+            category: state.pathParameters['category']!,
+          ),
+        );
+      },
+    ),
+
+    //
+    GoRoute(
+      name: 'product',
+      path: '/:category/:name',
+      pageBuilder: (context, state) {
+        return NoTransitionPage(
+          child: ProductDetails(
+            category: state.pathParameters['category']!,
+            name: state.pathParameters['name']!,
+            id: state.extra as String,
+          ),
+        );
+      },
+    ),
+  ],
+);

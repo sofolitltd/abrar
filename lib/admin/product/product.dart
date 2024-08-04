@@ -3,14 +3,17 @@ import 'package:abara/utils/constants.dart';
 import 'package:abara/widgets/header.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../screen/home/product_details.dart';
-import '../../widgets/custom_route.dart';
+import '../../widgets/slug_generator.dart';
 
 class Product extends StatelessWidget {
-  const Product({super.key, this.category});
+  const Product({
+    super.key,
+    // this.category,
+  });
 
-  final String? category;
+  // final String? category;
 
   @override
   Widget build(BuildContext context) {
@@ -107,14 +110,14 @@ class Product extends StatelessWidget {
                               },
                               displayStringForOption: (ProductModel option) =>
                                   option.name,
-                              onSelected: (ProductModel selectedItem) {
-                                Navigator.push(
-                                  context,
-                                  CustomPageRoute(
-                                    builder: (context) => ProductDetails(
-                                      productModel: selectedItem,
-                                    ),
-                                  ),
+                              onSelected: (ProductModel productModel) {
+                                context.goNamed(
+                                  'product',
+                                  pathParameters: {
+                                    'category': productModel.category,
+                                    'id': productModel.id
+                                  },
+                                  extra: productModel,
                                 );
                               },
                               fieldViewBuilder: (BuildContext context,
@@ -219,13 +222,15 @@ class Product extends StatelessWidget {
                                 return GestureDetector(
                                   onTap: () {
                                     //
-                                    Navigator.push(
-                                      context,
-                                      CustomPageRoute(
-                                        builder: (context) => ProductDetails(
-                                          productModel: productModel,
-                                        ),
-                                      ),
+                                    context.goNamed(
+                                      'product',
+                                      pathParameters: {
+                                        'category':
+                                            productModel.category.toLowerCase(),
+                                        'name':
+                                            slugGenerator(productModel.name),
+                                      },
+                                      extra: productModel,
                                     );
                                   },
                                   child: Stack(

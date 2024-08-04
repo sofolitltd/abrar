@@ -1,24 +1,26 @@
-import 'package:abara/model/category_model.dart';
+import 'package:abara/widgets/capitalize_words.dart';
 import 'package:abara/widgets/header.dart';
+import 'package:abara/widgets/slug_generator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../model/product_model.dart';
 import '../../utils/constants.dart';
-import '../../widgets/custom_route.dart';
-import 'product_details.dart';
 
 class CategoryDetails extends StatefulWidget {
-  const CategoryDetails({super.key, required this.categoryModel});
+  const CategoryDetails({
+    super.key,
+    required this.category,
+  });
 
-  final CategoryModel categoryModel;
+  final String category;
 
   @override
   State<CategoryDetails> createState() => _CategoryDetailsState();
 }
 
 class _CategoryDetailsState extends State<CategoryDetails> {
-  var brand = 'Al Naim';
   String _sortBy = 'Default';
 
   @override
@@ -26,7 +28,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     Query<Map<String, dynamic>>? ref;
     var ref1 = FirebaseFirestore.instance
         .collection('products')
-        .where('category', isEqualTo: widget.categoryModel.name);
+        .where('category', isEqualTo: capitalizeWords(widget.category));
 
     if (_sortBy == 'Default') {
       ref = ref1;
@@ -37,6 +39,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
     }
 
     return Scaffold(
+      drawer: const DrawerSection(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -61,7 +64,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                         children: [
                           InkWell(
                             onTap: () {
-                              Navigator.pop(context);
+                              context.goNamed('home');
                             },
                             child: Icon(
                               Icons.home,
@@ -75,7 +78,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                             child: Padding(
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
-                              child: Text(widget.categoryModel.name),
+                              child: Text(capitalizeWords(widget.category)),
                             ),
                           ),
                         ],
@@ -84,7 +87,7 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                       const SizedBox(height: 16),
                       //
                       Text(
-                        widget.categoryModel.name,
+                        capitalizeWords(widget.category),
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
@@ -222,12 +225,15 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                               return InkWell(
                                 borderRadius: BorderRadius.circular(8),
                                 onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    CustomPageRoute(
-                                      builder: (context) => ProductDetails(
-                                          productModel: productModel),
-                                    ),
+                                  //
+                                  context.goNamed(
+                                    'product',
+                                    pathParameters: {
+                                      'category':
+                                          productModel.category.toLowerCase(),
+                                      'name': slugGenerator(productModel.name),
+                                    },
+                                    extra: productModel.id,
                                   );
                                 },
                                 child: Container(
@@ -278,10 +284,12 @@ class _CategoryDetailsState extends State<CategoryDetails> {
                                                 textAlign: TextAlign.left,
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  height: 1.2,
-                                                  fontSize: 18,
-                                                ),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                      height: 1.25,
+                                                    ),
                                               ),
                                             ),
 

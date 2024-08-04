@@ -1,16 +1,15 @@
 import 'package:abara/model/product_model.dart';
-import 'package:abara/screen/home/category_details.dart';
-import 'package:abara/screen/home/product_details.dart';
 import 'package:abara/utils/constants.dart';
 import 'package:abara/widgets/header.dart';
 import 'package:abara/widgets/running_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '/widgets/image_slider.dart';
 import '../../model/category_model.dart';
 import '../../model/image_model.dart';
-import '../../widgets/custom_route.dart';
+import '../../widgets/slug_generator.dart';
 
 //
 
@@ -19,191 +18,13 @@ List<String> offers = [
   'assets/images/img2.png',
 ];
 
-List products = [
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator , tpi ffsfsff fsfsfsf fsfs',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator aafafaf af',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator afafa afaf ad',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-  {
-    'title': 'Ator',
-    'image': 'assets/images/cover1.png',
-    'price': '100',
-  },
-];
-
 class Home extends StatelessWidget {
   const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //
-      // drawer: Drawer(
-      //   child: SafeArea(
-      //     child: Padding(
-      //       padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      //       child: Column(
-      //         children: [
-      //           //
-      //           const Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //             children: [
-      //               // logo
-      //               Text.rich(
-      //                 TextSpan(
-      //                     text: 'Abrar',
-      //                     style: TextStyle(
-      //                       fontWeight: FontWeight.bold,
-      //                       color: Colors.blueAccent,
-      //                       fontSize: 20,
-      //                     ),
-      //                     children: [
-      //                       TextSpan(
-      //                         text: ' Shop',
-      //                         style: TextStyle(
-      //                           fontWeight: FontWeight.w100,
-      //                           color: Colors.black,
-      //                         ),
-      //                       )
-      //                     ]),
-      //               ),
-      //
-      //               //
-      //               CloseButton(),
-      //             ],
-      //           ),
-      //
-      //           const Divider(height: 4),
-      //
-      //           const SizedBox(height: 8),
-      //
-      //           //
-      //           // Expanded(
-      //           //   child: ListView.separated(
-      //           //     separatorBuilder: (_, __) {
-      //           //       return const Divider(
-      //           //         height: .5,
-      //           //         thickness: .5,
-      //           //         endIndent: 32,
-      //           //       );
-      //           //     },
-      //           //     shrinkWrap: true,
-      //           //     itemCount: categoryList.length,
-      //           //     itemBuilder: (context, index) {
-      //           //       return ExpansionTile(
-      //           //         backgroundColor: Colors.blueGrey.shade50,
-      //           //         shape: const Border(),
-      //           //         title: Text(categoryList[index].name),
-      //           //         visualDensity: const VisualDensity(
-      //           //           vertical: -4,
-      //           //           horizontal: -4,
-      //           //         ),
-      //           //         tilePadding: const EdgeInsets.only(left: 4),
-      //           //         children: [
-      //           //           ListView.builder(
-      //           //             shrinkWrap: true,
-      //           //             itemCount: categoryList[index].brands.length,
-      //           //             itemBuilder: (context, index) {
-      //           //               return ListTile(
-      //           //                 onTap: () {
-      //           //                   Navigator.pop(context);
-      //           //                 },
-      //           //                 title: Text(
-      //           //                   categoryList[index].brands[index].name,
-      //           //                 ),
-      //           //                 visualDensity: const VisualDensity(
-      //           //                   vertical: -4,
-      //           //                   horizontal: -4,
-      //           //                 ),
-      //           //                 contentPadding:
-      //           //                     const EdgeInsets.symmetric(horizontal: 8),
-      //           //               );
-      //           //             },
-      //           //           ),
-      //           //           const SizedBox(height: 4),
-      //           //         ],
-      //           //       );
-      //           //     },
-      //           //   ),
-      //           // ),
-      //         ],
-      //       ),
-      //     ),
-      //   ),
-      // ),
-
-      //
+      drawer: const DrawerSection(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Center(
@@ -225,7 +46,7 @@ class Home extends StatelessWidget {
                             ImageSlider(images: sliderImageList),
 
                             // offer
-                            const InfoImage(),
+                            const offerImages(),
                           ],
                         )
                       else
@@ -237,7 +58,7 @@ class Home extends StatelessWidget {
                                 child: ImageSlider(images: sliderImageList)),
 
                             // offer
-                            const Expanded(flex: 2, child: InfoImage()),
+                            const Expanded(flex: 2, child: offerImages()),
                           ],
                         ),
 
@@ -302,6 +123,7 @@ class Home extends StatelessWidget {
                                   ],
                                 ),
                               ),
+
                               const SizedBox(height: 4),
 
                               // category list
@@ -333,12 +155,12 @@ class Home extends StatelessWidget {
                                   return InkWell(
                                     borderRadius: BorderRadius.circular(8),
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        CustomPageRoute(
-                                          builder: (context) => CategoryDetails(
-                                              categoryModel: categoryModel),
-                                        ),
+                                      context.goNamed(
+                                        'category',
+                                        pathParameters: {
+                                          'category':
+                                              slugGenerator(categoryModel.name)
+                                        },
                                       );
                                     },
                                     child: Container(
@@ -367,6 +189,7 @@ class Home extends StatelessWidget {
                                             ),
                                           ),
 
+                                          const Divider(height: .1),
                                           //
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
@@ -491,12 +314,16 @@ class Home extends StatelessWidget {
                                   return InkWell(
                                     borderRadius: BorderRadius.circular(8),
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        CustomPageRoute(
-                                          builder: (context) => ProductDetails(
-                                              productModel: productModel),
-                                        ),
+                                      //
+                                      context.goNamed(
+                                        'product',
+                                        pathParameters: {
+                                          'category': productModel.category
+                                              .toLowerCase(),
+                                          'name':
+                                              slugGenerator(productModel.name),
+                                        },
+                                        extra: productModel.id,
                                       );
                                     },
                                     child: Container(
@@ -549,10 +376,12 @@ class Home extends StatelessWidget {
                                                     maxLines: 2,
                                                     overflow:
                                                         TextOverflow.ellipsis,
-                                                    style: const TextStyle(
-                                                      height: 1.2,
-                                                      fontSize: 18,
-                                                    ),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleMedium!
+                                                        .copyWith(
+                                                          height: 1.25,
+                                                        ),
                                                   ),
                                                 ),
 
@@ -597,8 +426,9 @@ class Home extends StatelessWidget {
   }
 }
 
-class InfoImage extends StatelessWidget {
-  const InfoImage({
+//
+class offerImages extends StatelessWidget {
+  const offerImages({
     super.key,
   });
 
