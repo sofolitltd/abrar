@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '/models/cart_model.dart';
+import '/models/product_model.dart';
 import '/providers/cart_provider.dart';
+import '/routes/app_route.dart';
 import '/utils/constants/constants.dart';
 import '/utils/k_text.dart';
-import '../../models/product_model.dart';
-import '../../routes/app_route.dart';
 
 class ProductCard extends ConsumerWidget {
   final ProductModel product;
@@ -139,21 +139,27 @@ class ProductCard extends ConsumerWidget {
                   if (isInCart) {
                     cartNotifier.removeFromCart(product.id);
 
+                    //
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('Item removed from cart'),
                         backgroundColor: Colors.red,
                         behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 1),
                       ),
                     );
                   } else {
                     cartNotifier.addToCart(cartItem);
 
+                    //first close the snackbar
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: const Text('Item added to cart'),
                         backgroundColor: Colors.green,
                         behavior: SnackBarBehavior.floating,
+                        duration: Duration(seconds: 1),
                       ),
                     );
                   }
@@ -168,7 +174,7 @@ class ProductCard extends ConsumerWidget {
                   ),
                   padding: const EdgeInsets.all(4),
                   child: Icon(
-                    isInCart ? Iconsax.shopping_bag5 : Iconsax.shopping_bag,
+                    isInCart ? Iconsax.shopping_cart5 : Iconsax.shopping_cart,
                     size: 18,
                     color: isInCart ? Colors.white : Colors.black,
                   ),

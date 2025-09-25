@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '/providers/cart_provider.dart';
-import '../../notification/notification_chip.dart';
 import '../cart/cart_page.dart';
 import 'search_and_banner_section.dart';
 import 'widgets/featured_brands_section.dart';
@@ -17,7 +16,7 @@ class Home extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cartItems = ref.watch(cartProvider);
-    var userId = FirebaseAuth.instance.currentUser!.uid;
+    var user = FirebaseAuth.instance.currentUser;
 
     return Scaffold(
       appBar: AppBar(
@@ -54,12 +53,12 @@ class Home extends ConsumerWidget {
                     context,
                   ).push(MaterialPageRoute(builder: (_) => const CartPage()));
                 },
-                icon: const Icon(Iconsax.shopping_bag, size: 18),
+                icon: const Icon(Iconsax.shopping_cart, size: 18),
               ),
               if (cartItems.isNotEmpty)
                 Positioned(
-                  right: 6,
-                  top: 6,
+                  right: 0,
+                  top: 2,
                   child: CircleAvatar(
                     radius: 8,
                     backgroundColor: Colors.red,
@@ -76,11 +75,8 @@ class Home extends ConsumerWidget {
             ],
           ),
 
-          const SizedBox(width: 2),
-
-          //
-          if (userId.isNotEmpty) NotificationIconButton(userId: userId),
-
+          // const SizedBox(width: 2),
+          // if (user != null) NotificationIconButton(userId: user.uid),
           const SizedBox(width: 8),
         ],
       ),

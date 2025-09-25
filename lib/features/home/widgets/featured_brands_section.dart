@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '/models/brand_model.dart';
 import '/providers/brand_providers.dart';
 import '/routes/app_route.dart';
-import '../../../routes/router_config.dart';
+import '../../../providers/product_providers.dart';
 
 class FeaturedBrandSection extends ConsumerWidget {
   const FeaturedBrandSection({super.key});
@@ -88,6 +88,19 @@ class BrandItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        //
+        final notifier = ProviderScope.containerOf(
+          context,
+        ).read(productPaginationProvider.notifier);
+        notifier.setFilter(
+          category: null,
+          subCategory: null,
+          brand: brand.name,
+          isFeatured: null,
+          sortBy: null,
+        );
+
+        //
         context.push(
           AppRoute.products.path,
           extra: ProductsPageParams(brand: brand.name),

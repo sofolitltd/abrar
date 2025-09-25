@@ -47,6 +47,9 @@ class ProductRepository {
         query = query.orderBy('salePrice', descending: true);
         break;
       case 'Latest Items':
+        query = query.orderBy('createdDate', descending: true);
+        break;
+
       default:
         query = query.orderBy('createdDate', descending: true);
     }

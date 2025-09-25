@@ -209,8 +209,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 
-import '../routes/router_config.dart';
-
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   log('Background FCM: ${message.notification?.title}');
 }
@@ -293,27 +291,19 @@ class FcmApi {
   }
 
   void _handleNavigation(Map<String, dynamic> data) {
-    final type = data['type'];
-
-    //todo: add navigation based on type
-    switch (type) {
-      case 'chats':
-        final chatId = data['chatId'];
-        if (chatId != null) {
-          routerConfig.push('/chats');
-          routerConfig.push('/chats/$chatId');
-        }
-        break;
-      case 'community':
-        final communityId = data['communityId'];
-        if (communityId != null) {
-          routerConfig.push('/community');
-          routerConfig.push('/community/$communityId');
-        }
-        break;
-      default:
-        routerConfig.go('/notification');
-    }
+    // final type = data['type'];
+    //
+    // //todo: add navigation based on type
+    // switch (type) {
+    //   case 'products':
+    //     final productId = data['productId'];
+    //     if (productId != null) {
+    //       routerConfig.push('/product-details', extra: productId);
+    //     }
+    //     break;
+    //   default:
+    //     routerConfig.go('/notifications');
+    // }
   }
 
   //

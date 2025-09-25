@@ -187,7 +187,7 @@ class Profile extends ConsumerWidget {
               padding: const EdgeInsets.only(left: 16, right: 10),
               margin: const EdgeInsets.only(bottom: 10),
               child: ListTile(
-                onTap: () => Navigator.pushNamed(context, setting['route']),
+                onTap: () => context.push(setting['route']),
                 contentPadding: EdgeInsets.zero,
                 title: Text(
                   setting['title'],

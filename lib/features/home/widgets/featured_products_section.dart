@@ -1,4 +1,3 @@
-import 'package:abrar/routes/router_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -23,9 +22,21 @@ class FeaturedProductsSection extends ConsumerWidget {
       asyncProducts: asyncProducts,
       seeMoreRoute: () {
         //
+        final notifier = ProviderScope.containerOf(
+          context,
+        ).read(productPaginationProvider.notifier);
+        notifier.setFilter(
+          category: null,
+          subCategory: null,
+          brand: null,
+          isFeatured: true,
+          sortBy: null,
+        );
+
+        //
         context.push(
           AppRoute.products.path,
-          extra: ProductsPageParams(isFeatured: true, sortBy: 'Latest Items'),
+          extra: ProductsPageParams(isFeatured: true),
         );
       },
     );
@@ -46,9 +57,20 @@ class LatestProductsSection extends ConsumerWidget {
       asyncProducts: asyncProducts,
       seeMoreRoute: () {
         //
+        final notifier = ProviderScope.containerOf(
+          context,
+        ).read(productPaginationProvider.notifier);
+        notifier.setFilter(
+          category: null,
+          subCategory: null,
+          brand: null,
+          isFeatured: null,
+          sortBy: 'Latest Items',
+        );
+        //
         context.push(
           AppRoute.products.path,
-          extra: ProductsPageParams(isFeatured: false, sortBy: 'Latest Items'),
+          extra: ProductsPageParams(sortBy: 'Latest Items'),
         );
       },
     );

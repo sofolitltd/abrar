@@ -1,10 +1,11 @@
+import 'package:abrar/features/widgets/admin_widget.dart';
 import 'package:abrar/notification/test_notification.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '/routes/router_config.dart';
 import '../routes/app_route.dart';
 import 'notification_model.dart';
 import 'notification_provider.dart';
@@ -74,8 +75,8 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
         centerTitle: true,
         actions: [
           // todo: admin test only
-          if (widget.userId == "asifreyad1@gmail.com")
-            IconButton(
+          AdminWidget(
+            child: IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
@@ -84,6 +85,7 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
               },
               icon: Icon(Iconsax.notification_favorite),
             ),
+          ),
         ],
       ),
       body: asyncNotifications.when(
@@ -148,17 +150,16 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                     onTap: () async {
                       // mark as read
                       await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(widget.userId)
                           .collection('notifications')
                           .doc(notificationModel.id)
                           .update({'read': true});
+
                       // handle navigation based on type
                       switch (notificationModel.type) {
                         case 'products':
                           final productId = notificationModel.data['productId'];
                           if (productId != null) {
-                            routerConfig.push(
+                            context.push(
                               AppRoute.productDetails.path,
                               extra: productId,
                             );
@@ -168,14 +169,16 @@ class _NotificationPageState extends ConsumerState<NotificationPage> {
                         case 'offers':
                           final offerId = notificationModel.data['offerId'];
                           if (offerId != null) {
-                            routerConfig.push(
+                            context.push(
                               AppRoute.productDetails.path,
                               extra: offerId,
                             );
                           }
                           break;
+                        case 'notifications':
+                          break;
                         default:
-                          routerConfig.push(AppRoute.home.path);
+                          context.push(AppRoute.home.path);
                       }
                     },
                   ),

@@ -5,6 +5,7 @@ import 'package:abrar/models/address_model.dart';
 import 'package:abrar/models/product_model.dart';
 import 'package:abrar/notification/notification_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -21,8 +22,10 @@ import '../features/checkout/order_placed.dart';
 import '../features/home/all_brands_page.dart';
 import '../features/home/all_categories_page.dart';
 import '../features/orders/order_details.dart';
+import '../features/orders/orders.dart';
 import '../features/products/products_details.dart';
 import '../models/order_model.dart';
+import '../providers/product_providers.dart';
 import 'app_route.dart';
 
 // Global key for the root navigator, essential for GoRouter
@@ -90,9 +93,10 @@ final GoRouter routerConfig = GoRouter(
             GoRoute(
               name: AppRoute.shop.name,
               path: AppRoute.shop.path,
-              pageBuilder: (context, state) => const NoTransitionPage(
-                child: ProductsPage(sortBy: "Low to High"),
-              ),
+              pageBuilder: (context, state) {
+                //
+                return NoTransitionPage(child: ProductsPage(sortBy: 'Name'));
+              },
             ),
           ],
         ),
@@ -253,6 +257,15 @@ final GoRouter routerConfig = GoRouter(
       },
     ),
 
+    // order
+    GoRoute(
+      name: AppRoute.orders.name,
+      path: AppRoute.orders.path,
+      pageBuilder: (context, state) {
+        return NoTransitionPage(child: Orders());
+      },
+    ),
+
     // order details
     GoRoute(
       name: AppRoute.orderDetails.name,
@@ -322,6 +335,21 @@ class ScaffoldWithNavBar extends StatelessWidget {
               index,
               initialLocation: index == navigationShell.currentIndex,
             );
+
+            //
+            if (index == 1) {
+              // Use the context from this build method
+              final notifier = ProviderScope.containerOf(
+                context,
+              ).read(productPaginationProvider.notifier);
+              notifier.setFilter(
+                category: null,
+                subCategory: null,
+                brand: null,
+                isFeatured: null,
+                sortBy: 'Name',
+              );
+            }
           },
         ),
       ),

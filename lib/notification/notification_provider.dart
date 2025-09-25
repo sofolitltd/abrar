@@ -12,8 +12,6 @@ class NotificationRepository {
     DocumentSnapshot? startAfter,
   }) {
     Query query = _firestore
-        .collection('users')
-        .doc(userId)
         .collection('notifications')
         .orderBy('createdAt', descending: true)
         .limit(limit);

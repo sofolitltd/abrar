@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 import '/providers/category_providers.dart';
 import '/routes/app_route.dart';
 import '/utils/shimmer/featured_category_shimmer.dart';
-import '../../../routes/router_config.dart';
+import '../../../providers/product_providers.dart';
 
 class FeaturedCategoriesSection extends ConsumerWidget {
   const FeaturedCategoriesSection({super.key});
@@ -70,6 +70,18 @@ class FeaturedCategoriesSection extends ConsumerWidget {
                       onTap: () {
                         // Check if this category is a parent or subcategory
                         final bool isParent = category.parentId.isEmpty;
+
+                        //
+                        final notifier = ProviderScope.containerOf(
+                          context,
+                        ).read(productPaginationProvider.notifier);
+                        notifier.setFilter(
+                          category: isParent ? category.name : null,
+                          subCategory: isParent ? null : category.name,
+                          brand: null,
+                          isFeatured: null,
+                          sortBy: null,
+                        );
 
                         //
                         context.push(

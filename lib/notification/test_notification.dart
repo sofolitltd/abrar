@@ -162,6 +162,62 @@ class TestNotification extends StatelessWidget {
                 ),
               ],
             ),
+
+            //
+            Row(
+              spacing: 16,
+              children: [
+                //
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      visualDensity: VisualDensity(
+                        horizontal: -3,
+                        vertical: -3,
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+                    onPressed: () async {
+                      final topic = 'All';
+                      final title = 'Discount Offer!';
+                      final body = 'Lavely Fan';
+                      final data = {
+                        'type': 'products',
+                        'productId': '1722194435624',
+                      };
+
+                      //
+                      final type = 'products';
+
+                      //
+                      FCMSender.sendToTopic(
+                        topic: topic,
+                        title: title,
+                        body: body,
+                        data: data,
+                      );
+
+                      //
+                      await NotificationService.addNotification(
+                        type: type,
+                        title: title,
+                        body: body,
+                        data: data,
+                      );
+
+                      // show msg
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Product Notification')),
+                      );
+                    },
+                    child: Text('Product Notification'),
+                  ),
+                ),
+
+                //
+                Expanded(child: SizedBox()),
+              ],
+            ),
           ],
         ),
       ),

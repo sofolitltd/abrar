@@ -47,3 +47,5 @@ app.*.map.json
 #
 /lib/services/
 /assets/data/abrar-shop.json
+/android/app/upload-keystore.jks
+/android/key.properties
