@@ -1,5 +1,5 @@
 const kTkSymbol = '৳';
-const kProduction = false;
+const kProduction = true;
 
 const List<String> districtList = [
   "Bagerhat",

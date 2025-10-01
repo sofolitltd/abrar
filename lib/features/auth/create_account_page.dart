@@ -2,6 +2,7 @@ import 'package:abrar/routes/app_route.dart';
 import 'package:abrar/routes/router_config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,6 +54,11 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
           if (userCredential.user == null) return;
 
+          // notification
+          await FirebaseMessaging.instance.subscribeToTopic('user');
+          var token = await FirebaseMessaging.instance.getToken();
+
+          //
           final user = UserModel(
             uid: userCredential.user!.uid,
             name: _nameController.text.trim(),
@@ -60,7 +66,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             email: _emailController.text.trim(),
             image: '',
             createdDate: Timestamp.now(),
-            token: '',
+            token: token ?? "",
           );
 
           await FirebaseFirestore.instance

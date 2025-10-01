@@ -1,6 +1,8 @@
 // asifreyad1@gmail.com
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,6 +12,7 @@ import '../../providers/notifiers/user_notifier.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, this.route});
+
   final String? route;
 
   @override
@@ -39,6 +42,15 @@ class _LoginPageState extends State<LoginPage> {
         );
 
         if (userCredential.user == null) return;
+
+        // notification
+        await FirebaseMessaging.instance.subscribeToTopic('user');
+        // await FirebaseMessaging.instance.subscribeToTopic('admin');
+        var token = await FirebaseMessaging.instance.getToken();
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .update({"token": token});
 
         // in your login method, after Firebase signIn succeeds
         final container = ProviderScope.containerOf(context, listen: false);

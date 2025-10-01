@@ -71,123 +71,160 @@ class AddressPage extends ConsumerWidget {
                   userSnap.data!.data() as Map<String, dynamic>? ?? {};
               final defaultId = userData['defaultAddressId'] as String?;
 
-              return ListView.separated(
-                padding: const EdgeInsets.all(16),
-                separatorBuilder: (_, __) => const SizedBox(height: 16),
-                itemCount: addresses.length,
-                itemBuilder: (context, index) {
-                  final addressModel = addresses[index];
-                  final isSelected = addressModel.id == defaultId;
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Please select your address'),
+                    ),
 
-                  return GestureDetector(
-                    onTap: () async {
-                      // 🔥 Update Firestore defaultAddressId
-                      await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(uid)
-                          .update({'defaultAddressId': addressModel.id});
-                    },
-                    child: Stack(
-                      alignment: AlignmentGeometry.bottomRight,
-                      children: [
-                        //
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? Colors.blue.shade50
-                                : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: isSelected ? Colors.blue : Colors.black12,
-                              width: isSelected ? 2 : 2,
-                            ),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    //
+                    ListView.separated(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.all(16),
+                      separatorBuilder: (_, __) => const SizedBox(height: 16),
+                      itemCount: addresses.length,
+                      itemBuilder: (context, index) {
+                        final addressModel = addresses[index];
+                        final isSelected = addressModel.id == defaultId;
+
+                        return GestureDetector(
+                          onTap: () async {
+                            // 🔥 Update Firestore defaultAddressId
+                            await FirebaseFirestore.instance
+                                .collection('users')
+                                .doc(uid)
+                                .update({'defaultAddressId': addressModel.id});
+                          },
+                          child: Stack(
+                            alignment: AlignmentGeometry.bottomRight,
                             children: [
-                              Icon(
-                                isSelected
-                                    ? Icons.check_circle_outline
-                                    : Icons.circle_outlined,
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  spacing: 4,
+                              //
+                              Container(
+                                padding: const EdgeInsets.fromLTRB(
+                                  10,
+                                  10,
+                                  10,
+                                  10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? Colors.blue.shade50
+                                      : Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? Colors.blue
+                                        : Colors.black12,
+                                    width: isSelected ? 2 : 2,
+                                  ),
+                                ),
+                                child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      padding: EdgeInsets.symmetric(
-                                        vertical: 1,
-                                        horizontal: 8,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        // color: Colors.green,
-                                        border: Border.all(),
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Text("${addressModel.tag}"),
+                                    Icon(
+                                      isSelected
+                                          ? Icons.check_circle_outline
+                                          : Icons.circle_outlined,
                                     ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Column(
+                                        spacing: 4,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                              vertical: 1,
+                                              horizontal: 8,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              // color: Colors.green,
+                                              border: Border.all(),
+                                              borderRadius:
+                                                  BorderRadius.circular(6),
+                                            ),
+                                            child: Text("${addressModel.tag}"),
+                                          ),
 
-                                    SizedBox(height: 2),
-                                    Text(
-                                      addressModel.name.toUpperCase(),
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                                          SizedBox(height: 2),
+                                          Text(
+                                            addressModel.name.toUpperCase(),
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            "Mobile: ${addressModel.mobile}",
+                                          ),
+                                          Text(
+                                            "Address:${addressModel.addressLine}",
+                                          ),
+                                          Text(
+                                            "District: ${addressModel.district}",
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Text("Mobile: ${addressModel.mobile}"),
-                                    Text("Address:${addressModel.addressLine}"),
-                                    Text("District: ${addressModel.district}"),
                                   ],
                                 ),
                               ),
+
+                              //
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.delete,
+                                      color: Colors.red,
+                                    ),
+                                    onPressed: () async {
+                                      await FirebaseFirestore.instance
+                                          .collection('users')
+                                          .doc(uid)
+                                          .collection('address')
+                                          .doc(addressModel.id)
+                                          .delete();
+
+                                      // if add id == defaultAddressId ten del
+                                      if (addressModel.id == defaultId) {
+                                        await FirebaseFirestore.instance
+                                            .collection('users')
+                                            .doc(uid)
+                                            .update({'defaultAddressId': ""});
+                                      }
+                                    },
+                                  ),
+
+                                  //edit button
+                                  IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.blue,
+                                    ),
+                                    onPressed: () {
+                                      context.push(
+                                        AppRoute.editAddress.path,
+                                        extra: addressModel,
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
-                        ),
-
-                        //
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () async {
-                                await FirebaseFirestore.instance
-                                    .collection('users')
-                                    .doc(uid)
-                                    .collection('address')
-                                    .doc(addressModel.id)
-                                    .delete();
-
-                                // if add id == defaultAddressId ten del
-                                if (addressModel.id == defaultId) {
-                                  await FirebaseFirestore.instance
-                                      .collection('users')
-                                      .doc(uid)
-                                      .update({'defaultAddressId': ""});
-                                }
-                              },
-                            ),
-
-                            //edit button
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.blue),
-                              onPressed: () {
-                                context.push(
-                                  AppRoute.editAddress.path,
-                                  extra: addressModel,
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
+                        );
+                      },
                     ),
-                  );
-                },
+                  ],
+                ),
               );
             },
           );

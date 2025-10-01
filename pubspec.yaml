@@ -2,7 +2,7 @@ name: abrar
 description: "Abrar Shop mobile app"
 
 publish_to: 'none'
-version: 1.0.0+3
+version: 1.0.0+4
 
 environment:
   sdk: ^3.9.0
@@ -23,7 +23,7 @@ dependencies:
   iconsax: ^0.0.8
   shimmer: ^3.0.0
   cached_network_image: ^3.4.1
-  fluttertoast: ^8.2.14
+  fluttertoast: ^9.0.0
   intl: ^0.20.2
   flutter_inappwebview: ^6.1.5
   googleapis_auth: ^2.0.0
@@ -37,7 +37,7 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.14.4
 
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter_launcher_icons:
   android: "ic_launcher"

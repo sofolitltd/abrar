@@ -22,21 +22,31 @@ final productPaginationProvider =
       ProductPaginationNotifier.new,
     );
 
-// final product
-final featuredProductsProvider = FutureProvider<List<ProductModel>>((
-  ref,
-) async {
+// // final product
+// final featuredProductsProvider1 = FutureProvider<List<ProductModel>>((
+//   ref,
+// ) async {
+//   final repo = ref.read(productRepositoryProvider);
+//   return (await repo.fetchProducts(limit: 12, isFeatured: true))['products']
+//       as List<ProductModel>;
+// });
+//
+// // latest Product
+// final latestProductsProvider1 = FutureProvider<List<ProductModel>>((ref) async {
+//   final repo = ref.read(productRepositoryProvider);
+//   return (await repo.fetchProducts(
+//         limit: 12,
+//         sortBy: 'Latest Items',
+//       ))['products']
+//       as List<ProductModel>;
+// });
+
+final featuredProductsProvider = StreamProvider<List<ProductModel>>((ref) {
   final repo = ref.read(productRepositoryProvider);
-  return (await repo.fetchProducts(limit: 12, isFeatured: true))['products']
-      as List<ProductModel>;
+  return repo.streamProducts(limit: 12, isFeatured: true);
 });
 
-// latest Product
-final latestProductsProvider = FutureProvider<List<ProductModel>>((ref) async {
+final latestProductsProvider = StreamProvider<List<ProductModel>>((ref) {
   final repo = ref.read(productRepositoryProvider);
-  return (await repo.fetchProducts(
-        limit: 12,
-        sortBy: 'Latest Items',
-      ))['products']
-      as List<ProductModel>;
+  return repo.streamProducts(limit: 12, sortBy: 'Latest Items');
 });

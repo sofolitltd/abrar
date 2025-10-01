@@ -1,3 +1,4 @@
+import 'package:abrar/notification/fcm_sender.dart';
 import 'package:abrar/routes/app_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -916,14 +917,23 @@ class _CheckOutState extends ConsumerState<CheckOut> {
           .doc()
           .set(order.toMap());
 
-      if (paymentMethod == 'Bkash') {
-        for (var item in cartItems) {
-          await FirebaseFirestore.instance
-              .collection('products')
-              .doc(item.id)
-              .update({'stock': FieldValue.increment(-item.quantity)});
-        }
+      // update stock
+      // if (paymentMethod == 'Bkash') {
+      for (var item in cartItems) {
+        await FirebaseFirestore.instance
+            .collection('products')
+            .doc(item.id)
+            .update({'stock': FieldValue.increment(-item.quantity)});
       }
+      // }
+
+      //send notification to admin
+      FCMSender.sendToTopic(
+        topic: 'admin',
+        title: 'New Order',
+        body: 'New order placed.  ${order.paymentMethod}',
+        data: {},
+      );
 
       // Clear cart
       ref.read(cartProvider.notifier).clearCart();

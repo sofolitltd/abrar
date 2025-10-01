@@ -66,6 +66,55 @@ class ProductRepository {
     return {'products': products, 'lastDoc': lastDoc};
   }
 
+  /// 🔥 Stream version (auto updates)
+  Stream<List<ProductModel>> streamProducts({
+    int limit = 16,
+    String sortBy = 'createdDate',
+    bool descending = true,
+    String? category,
+    String? subCategory,
+    String? brand,
+    bool? isFeatured,
+  }) {
+    Query query = _db.collection('products');
+
+    // Apply filters
+    if (category != null) query = query.where('category', isEqualTo: category);
+    if (subCategory != null) {
+      query = query.where('subCategory', isEqualTo: subCategory);
+    }
+    if (brand != null) query = query.where('brand', isEqualTo: brand);
+    if (isFeatured != null) {
+      query = query.where('isFeatured', isEqualTo: isFeatured);
+    }
+
+    // Sorting
+    switch (sortBy) {
+      case 'Name':
+        query = query.orderBy('name', descending: descending);
+        break;
+      case 'Low to High':
+        query = query.orderBy('salePrice', descending: false);
+        break;
+      case 'High to Low':
+        query = query.orderBy('salePrice', descending: true);
+        break;
+      case 'Latest Items':
+        query = query.orderBy('createdDate', descending: true);
+        break;
+      default:
+        query = query.orderBy('createdDate', descending: true);
+    }
+
+    query = query.limit(limit);
+
+    return query.snapshots().map(
+      (snapshot) => snapshot.docs
+          .map((doc) => ProductModel.fromQuerySnapshot(doc))
+          .toList(),
+    );
+  }
+
   /// Get total number of products
   Future<int> getTotalProducts({
     String? category,
